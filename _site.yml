@@ -3,9 +3,8 @@ title: "Matthew Harris"
 description: |
   Short posts and ideas on how I conduct data anlysis.
 output_dir: "_site"
-baseurl: 
+base_url: https://mh-blog.netlify.app
 navbar:
-  logo: images/logo.png
   right:
     - text: "Home"
       href: index.html

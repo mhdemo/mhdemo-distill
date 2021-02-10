@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
+  <url>
+    <loc>https://mh-blog.netlify.app/about.html</loc>
+    <lastmod>2021-02-10T08:41:19-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://mh-blog.netlify.app/</loc>
+    <lastmod>2021-02-10T12:49:58-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://mh-blog.netlify.app/posts/2020-01-20-animating-plots-in-r/</loc>
+    <lastmod>2021-02-10T12:48:33-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://mh-blog.netlify.app/posts/2021-02-10-welcome-to-matthew-harris/</loc>
+    <lastmod>2021-02-10T10:51:33-05:00</lastmod>
+  </url>
+</urlset>

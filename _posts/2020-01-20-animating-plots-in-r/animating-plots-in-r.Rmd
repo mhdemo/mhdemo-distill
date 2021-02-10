@@ -2,9 +2,10 @@
 title: "Animating Plots in R"
 description: |
   Using Plotly to animate plots in R.
+base_url: https://mh-blog.netlify.app
+preview: static_plot.png
 author:
   - name: Matthew Harris
-    url: 
 date: 01-20-2020
 output:
   distill::distill_article:
@@ -165,17 +166,5 @@ plot_ly(const_top_10,
   layout(yaxis = list(title = "Total Podiums"),
          xaxis = list(title = "Top 10 Constructors")) %>%
   animation_slider(currentvalue = list(prefix = "Year "))
-```
-```{r}
-const_top_10 %>% 
-  group_by(c_name) %>% 
-  summarize(total_podiums = sum(cum_podiums)) %>% 
-  ggplot(aes(c_name, total_podiums, fill = c_name)) + geom_col() +
-  scale_fill_npg() +
-  labs(x = "Top 10 Constructors",
-                          y = "Total Podiums",
-                          fill = "") +
-  theme(legend.position = "none") +
-  coord_flip()
 ```
  

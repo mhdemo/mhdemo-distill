@@ -6,14 +6,14 @@
       "description": "Some additional details about the blog",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-02-10T12:11:53-05:00"
+      "last_modified": "2021-02-10T12:50:01-05:00"
     },
     {
       "path": "index.html",
-      "title": "Matthew Harris",
+      "title": "Posts",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-02-10T12:11:53-05:00"
+      "last_modified": "2021-02-10T12:50:02-05:00"
     }
   ],
   "collections": ["posts/posts.json"]
