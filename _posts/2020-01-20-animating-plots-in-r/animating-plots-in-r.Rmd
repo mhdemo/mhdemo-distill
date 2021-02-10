@@ -1,0 +1,181 @@
+---
+title: "Animating Plots in R"
+description: |
+  Using Plotly to animate plots in R.
+author:
+  - name: Matthew Harris
+    url: 
+date: 01-20-2020
+output:
+  distill::distill_article:
+    toc: TRUE
+    toc_depth: 3
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Goals
+
+Animated visualization can be great for communicating changes over time that might
+be harder to interpret from static plots. My goal is to calculate the per year 
+podium counts for each of the top ten constructors. I then want to create a plot in 
+Plotly that will allow me animate the change in podiums over time.
+
+## Packages
+
+First we need to the packages need for this analysis.
+
+```{r, message = FALSE}
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(plotly)
+library(ggsci)
+library(here)
+```
+
+## Data Import
+
+The data used for this analysis can be found at the following link. <br>
+
+[Formula One Data](https://github.com/mhdemo/proj_site/tree/master/content/posts/data)
+
+```{r, include=FALSE}
+read_rds("large_data/f1_master_table.rds") %>% 
+  filter(!is.na(dob)) %>%
+  mutate(drv_name = iconv(paste(forename, surname), 
+                          from = "UTF-8", 
+                          to = "ASCII", sub = ""),
+         race_age = time_length(interval(dob, race_date), "years"),
+         ra_group = as.character(cut(race_age, 
+                                     breaks = seq(15, 60, 5),
+                                     labels = c("16-20", "21-25",
+                                                "26-30", "31-35",
+                                                "36-40", "41-45",
+                                                "46-50", "51-55", 
+                                                "56-60")))) %>%
+  group_by(driverId) %>%
+  mutate(podium = if_else(positionOrder %in% c(1:3), 1, 0),
+         win = if_else(positionOrder == 1, 1, 0)) %>%
+  ungroup() -> f1_data
+
+my_pal <- pal_npg()(7)
+```
+
+## Data Transformation
+
+Before I can create the animated plot I need to transform the data into a format
+that will be easier to work with.
+
+```{r}
+f1_data %>%
+  #Groups by constructor name
+  group_by(c_name) %>%
+  #Calculates the total podiums by constructor
+  summarize(total_p = sum(podium)) %>%
+  #Filters olnly for the top 10 constructors 
+  #by total podiums
+  top_n(10, total_p) %>%
+  #Pulls the constructor name column out as a vector
+  pull(c_name) -> top_10_const
+
+```
+
+With the top ten constructors identified, I can compute the additional value needed for the animated plot: 
+the cumulative podium wins per year. 
+
+```{r}
+f1_data %>%
+  #Filters by the top constructors identified 
+  #from the previous step
+  filter(c_name %in% top_10_const) %>%
+  #Groups by the race year and contructor name
+  group_by(race_year, c_name) %>%
+  #Calculates the total podiums per year for 
+  #each constructor
+  summarize(annual_podium = sum(podium)) %>%
+  ungroup() %>%
+  #Sort the data by race year to ensure that the
+  #cumulative calculations work correctly
+  arrange(race_year) %>%
+  #Pivots the data into a wide format so that each 
+  #constructor with their annual podium count is in a 
+  #seperate column
+  pivot_wider(names_from = c_name, 
+              values_from = annual_podium) %>%
+  #Replaces NA values with 0. This will ensure that the
+  #cumulative podium calculation doesn't skip years where
+  #there isn't data
+  map_df(~if_else(is.na(.x), 0, .x)) %>%
+  #Pivots the data back to the long format
+  pivot_longer(cols = c(2:ncol(.)), 
+               names_to = "c_name", 
+               values_to = "annual_podium") %>%
+  #Nest the data by constructor name
+  group_by(c_name) %>%
+  nest() %>%
+  #Calculates the cumulative podium count for each year
+  #for each consrtuctor
+  mutate(cum_podiums = map(data, 
+                            ~cumsum(.x$annual_podium))) %>%
+  unnest(c(data, cum_podiums)) %>%
+  #Drops the annual podium column
+  ungroup() %>%
+  select(-annual_podium) -> const_top_10
+
+const_top_10 %>%
+  head()
+```
+
+## Static plot
+
+For comparison I have utilized our new values to visualize the podium performance with a static plot.
+In order to communicate the same information I've chosen to facet the plots by year. Since there are so
+many years to facet the plot becomes noisy and difficult to interpret. Now lets see how the animated plot
+performs.
+
+```{r, preview=FALSE}
+const_top_10 %>%
+  ggplot(aes(c_name, cum_podiums, fill = c_name)) + 
+  geom_col() + facet_wrap(~race_year) + 
+  theme(axis.text.x = element_text(angle = 45)) +
+  scale_fill_npg() + labs(x = "Top 10 Constructors",
+                          y = "Total Podiums",
+                          fill = "")
+```
+
+## Creating the animated plot!!!
+
+The animated plot is fairly easy to create. I just need to supply the
+`race_year` column to the frame parameter. This will allow anyone to use the slider
+to move through time and see how podiums counts have changed for each constructor. It's also way
+easier to compare the performance of each constructor and identify trends.
+
+```{r}
+plot_ly(const_top_10,
+        x = ~c_name,
+        y = ~cum_podiums,
+        color = ~c_name,
+        colors = my_pal,
+        type = "bar",
+        frame = ~race_year) %>% 
+  layout(yaxis = list(title = "Total Podiums"),
+         xaxis = list(title = "Top 10 Constructors")) %>%
+  animation_slider(currentvalue = list(prefix = "Year "))
+```
+```{r}
+const_top_10 %>% 
+  group_by(c_name) %>% 
+  summarize(total_podiums = sum(cum_podiums)) %>% 
+  ggplot(aes(c_name, total_podiums, fill = c_name)) + geom_col() +
+  scale_fill_npg() +
+  labs(x = "Top 10 Constructors",
+                          y = "Total Podiums",
+                          fill = "") +
+  theme(legend.position = "none") +
+  coord_flip()
+```
+ 

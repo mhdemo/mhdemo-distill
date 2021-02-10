@@ -1,0 +1,19 @@
+---
+title: "Welcome"
+description: |
+  Welcome to my blog!
+author:
+  - name: Matthew Harris 
+    url: 
+date: 01-01-2020
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Thanks for checking out my project/blog site! This site will be used to post various tips on conducting data analysis with R and Python.
+

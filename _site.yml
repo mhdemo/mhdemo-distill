@@ -1,0 +1,18 @@
+name: "mhdemo-distill"
+title: "Matthew Harris"
+description: |
+  Short posts and ideas on how I conduct data anlysis.
+output_dir: "_site"
+baseurl: 
+navbar:
+  logo: images/logo.png
+  right:
+    - text: "Home"
+      href: index.html
+    - icon: fa fa-github
+      href: https://github.com/mhdemo
+    - icon: fa fa-twitter
+      href: https://twitter.com/m_hrrs 
+    - text: "About"
+      href: about.html
+output: distill::distill_article
