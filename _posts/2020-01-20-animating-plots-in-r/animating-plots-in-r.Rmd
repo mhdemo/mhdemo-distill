@@ -3,7 +3,7 @@ title: "Animating Plots in R"
 description: |
   Using Plotly to animate plots in R.
 base_url: https://mh-blog.netlify.app
-preview: static_plot.png
+preview: plot-preview.png
 author:
   - name: Matthew Harris
 date: 01-20-2020
