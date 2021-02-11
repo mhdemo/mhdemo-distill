@@ -1,0 +1,153 @@
+---
+title: "Apple Health Data - Workout Activity"
+description: |
+  Analyzing my run recent run activity.
+author:
+  - name: Matthew Harris
+date: 01-10-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+```{r, warning=FALSE, message=FALSE}
+xfun::pkg_attach('tidyverse', 'httr', 'xml2', 'lubridate', 
+                 'janitor', 'ggthemr', 'scales', 'ggsci')
+
+ggthemr("solarized")
+```
+
+## XML to RDS
+
+The XML file format is great for storing data, but I will want to extract and transform the information that I want into separate data frames. This can be accomplished easily by creating a function that extracts all nodes that contain a given attribute. 
+
+```{r}
+
+xml_to_rds <- function(xml_file, attr_select) {
+  
+  xml2::xml_find_all(xml_file, 
+                     paste0("//", attr_select)) %>% 
+    purrr::map(~xml2::xml_attrs(.x)) %>%
+    purrr::map_df(~as.list(.x)) %>% 
+    saveRDS(file = paste0(attr_select, ".RDS"))
+  
+}
+
+```
+
+The top of the `export.xml` file contains some documentation on what elements are present within the file. I'll focus primarily on the Workout nodes for this post.
+
+```{r, eval=FALSE}
+
+xml_to_rds(apple_health_export, "Workout")
+
+```
+
+```{r, include=FALSE}
+# Loads the .RDS file without including this code chunk in the post
+workouts <- readRDS("health_data/Workout.RDS")
+```
+
+## Data Cleansing
+
+Great. So now I have data frame that contains all of my workout data. Before I can begin any type of analysis, I'll need to perform a couple cleaning operations. I'll start by cleaning up the column names.
+
+```{r}
+
+names(workouts)
+
+workouts <- workouts %>% 
+  clean_names()
+
+names(workouts)
+  
+```
+Next I want to make sure that each variable has the correct data type. I can inspect the current column type with `glimpse()`.
+
+```{r}
+
+workouts %>% 
+  select(-device) %>% 
+  glimpse()
+
+```
+It looks as though all of the variables are currently categorized as characters. I can fix this using a combination of the `mutate()` and `across()` functions. I'm also adjusting the time to match my current timezone. Most of the data that I will be analyzing was captured during 2020, so I'm pretty sure I didn't travel to any other timezones.
+
+```{r}
+workouts <- workouts %>% 
+  select(-device) %>% 
+  mutate(across(.cols = contains("date"),
+                .fns = ~as_datetime(.x) - seconds(18000)),
+         across(.cols = c(duration, total_distance, 
+                          total_energy_burned),
+                .fns = ~as.double(.x)))
+
+workouts %>% 
+  glimpse()
+```
+
+## Analysis and Visualization
+
+On to the fun stuff. With my cleaned and formatted data, I can finally start to answer some questions. Let's determine what workout activity I've done the most, on which days, and at what times.
+
+```{r}
+workouts %>% 
+  count(workout_activity_type)
+
+workouts <- workouts %>% 
+  filter(workout_activity_type == "HKWorkoutActivityTypeRunning") %>% 
+  mutate(workout_day = weekdays(start_date),
+         workout_day = factor(workout_day, 
+                              levels = c("Monday", "Tuesday",
+                                         "Wednesday", "Thursday",
+                                         "Friday", "Saturday",
+                                         "Sunday")),
+         workout_hour = hour(start_date))
+
+workouts %>% 
+  ggplot(aes(workout_day)) + geom_bar() +
+  scale_y_continuous(breaks = breaks_width(5)) +
+  labs(x = "Weekday", y = "Count")
+
+workouts %>% 
+  ggplot(aes(workout_hour)) + geom_bar() +
+  scale_x_continuous(breaks = breaks_width(2)) +
+  labs(x = "Hour", y = "Count")
+```
+
+So far I have `r sum(workouts$workout_activity_type == "HKWorkoutActivityTypeRunning")` runs recorded. I've tried to stick to a running schedule of Monday, Wednesday, Friday, and Sunday. I also tend to go on most of my runs before 12:00 PM.
+
+I've tried to use running as a good way to stay active during the pandemic and haven't really focused on increasing my performance. It would still be interesting to see if I have either gotten faster or increased the distance that I'm running.
+
+```{r}
+workouts %>% 
+  filter(workout_activity_type == "HKWorkoutActivityTypeRunning") %>% 
+  mutate(min_per_mile = duration(duration / total_distance, "minute"),
+         creation_date = date(creation_date)) %>% 
+  filter(creation_date > "2020-01-01", 
+         total_distance >= 1.5) %>% 
+  ggplot(aes(creation_date, 
+             min_per_mile, 
+             col = total_distance)) + 
+  scale_color_gradient(low = "blue", high = "red", 
+                       breaks = seq(1.5, 4, 0.5)) +
+  geom_point(size = 3.5, alpha = 0.8) +
+  scale_y_time(labels = time_format("%M:%S"),
+               breaks = breaks_width(30)) +
+  scale_x_date(breaks = breaks_width("month"), 
+               date_labels = "%b %Y") +
+  labs(x = "Date", y = "Avg. Minutes / Mile",
+       col = "Miles") +
+  geom_smooth(method = "lm", se = FALSE, col = "black",
+              linetype = 2)
+
+```
+
+The plot above displays my average minutes per mile for each run. I've also mapped my distance to a gradient for each run. The darker blue indicates that a run was closer to 2 miles while the red indicates a distance of 3 miles or more. Most of the dots appear to be redder in hue. I currently have an average distance across all of my runs of `r workouts %>% filter(creation_date > "2020-01-01", total_distance >= 1.5) %>% pull(total_distance) %>% mean() %>% round(2)` miles. My distance may have stayed fairly constant since I started, but it looks like I'm getting faster. Now might be a good time for me to start to lengthen my runs.
+
+

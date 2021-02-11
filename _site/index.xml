@@ -18,6 +18,15 @@
       <media:content url="https://mh-blog.netlify.app/posts/2021-02-10-arlington-county-open-data-the-dogs-of-arlington/the-dogs-of-arlington_files/figure-html5/plot-1-1.png" medium="image" type="image/png" width="1248" height="768"/>
     </item>
     <item>
+      <title>Apple Health Data - Workout Activity</title>
+      <dc:creator>Matthew Harris</dc:creator>
+      <link>https://mh-blog.netlify.app/posts/2021-01-10-apple-health-data-workout-activity</link>
+      <description>Analyzing my run recent run activity.</description>
+      <guid>https://mh-blog.netlify.app/posts/2021-01-10-apple-health-data-workout-activity</guid>
+      <pubDate>Sun, 10 Jan 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://mh-blog.netlify.app/posts/2021-01-10-apple-health-data-workout-activity/apple-health-data-workout-activity_files/figure-html5/unnamed-chunk-8-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
       <title>Exporting data to multiple Excel tabs or files</title>
       <dc:creator>Matthew Harris</dc:creator>
       <link>https://mh-blog.netlify.app/posts/2020-06-28-exporting-data-to-multiple-excel-tabs-or-files</link>
