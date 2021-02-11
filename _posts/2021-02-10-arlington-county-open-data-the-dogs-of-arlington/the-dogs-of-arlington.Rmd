@@ -1,7 +1,7 @@
 ---
 title: "Arlington County Open Data - The dogs of Arlington"
 description: |
-  A short description of the post.
+  Visualizing recent dog adoptions.
 base_ulr: https://mh-blog.netlify.app  
 author:
   - name: Matthew Harris
