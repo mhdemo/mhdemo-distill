@@ -7,9 +7,18 @@
     <description>Short posts and ideas on how I conduct data anlysis.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 20 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jun 2020 00:00:00 +0000</lastBuildDate>
     <item>
-      <title>Animating Plots in R</title>
+      <title>Exporting data to multiple Excel tabs or files</title>
+      <dc:creator>Matthew Harris</dc:creator>
+      <link>https://mh-blog.netlify.app/posts/2020-06-28-exporting-data-to-multiple-excel-tabs-or-files</link>
+      <description>Exporting multiple data frames to separte Excel tabs or files with R.</description>
+      <guid>https://mh-blog.netlify.app/posts/2020-06-28-exporting-data-to-multiple-excel-tabs-or-files</guid>
+      <pubDate>Sun, 28 Jun 2020 00:00:00 +0000</pubDate>
+      <media:content url="https://mh-blog.netlify.app/posts/2020-06-28-exporting-data-to-multiple-excel-tabs-or-files/f1_excel_export_screenshot.png" medium="image" type="image/png" width="1269" height="1038"/>
+    </item>
+    <item>
+      <title>Animating plots in R</title>
       <dc:creator>Matthew Harris</dc:creator>
       <link>https://mh-blog.netlify.app/posts/2020-01-20-animating-plots-in-r</link>
       <description>Using Plotly to animate plots in R.</description>
