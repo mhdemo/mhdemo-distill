@@ -1,0 +1,185 @@
+---
+title: "Arlington County Open Data - The dogs of Arlington"
+description: |
+  A short description of the post.
+base_ulr: https://mh-blog.netlify.app  
+author:
+  - name: Matthew Harris
+date: 02-10-2021
+output:
+  distill::distill_article:
+    toc: TRUE
+    toc_depth: 3
+    self_contained: false
+---
+
+Arlington County offers a wealth of data for free through their Open Data 
+Portal. What better way to learn more about the area that I live than through 
+local data analysis. This post will cover dog permit registration within the 
+county.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+# Packages
+```{r, message=FALSE}
+xfun::pkg_attach(c("tidyverse", "httr", "jsonlite", "ggsci",
+                   "ggthemr", "cowplot", "here",
+                   "lubridate", "glue", "scales",
+                   "janitor", "skimr", "tigris"))
+```
+
+# API Calls
+
+I'll start by creating a function that creates an API call.
+
+```{r api-call}
+query_doggos <- function(skip, top) {
+  GET(url = "https://datahub-v2.arlingtonva.us/api/Tax/CurrentDogLicense",
+      query = list('$skip' = skip,
+                   '$top' = top)) %>% 
+    content(as = "text") %>% 
+    fromJSON() 
+}
+
+query_doggos(0, 5) %>% 
+  glimpse()
+```
+
+The functions works but the data types for the columns will need to be updated. I'll iterate over chunks of the data instead of querying everything at once. I'm choosing to use the purr `map()` function for this part of the process.
+
+```{r map-function}
+dog_permit_data <- xfun::cache_rds({
+  map2_df(.x = seq(0, 10000, 100), .y = 100,
+          ~query_doggos(.x, .y))
+})
+```
+
+# Transformation
+
+Great. I've got all of the data. Let's examine it again with the `glimpse()`
+function see what we ended up with.
+
+```{r glimpse-1}
+dog_permit_data %>%
+  glimpse(width = 50)
+```
+
+It looks like we have `r nrow(dog_permit_data)` rows. I'm assuming the
+`paymentDate` column refers to when the dog permit registration was submitted.
+There isn't anything super interesting about the dogs other than the genders
+and their spayed/neutered status at registration. The `ownerAddressText` column
+also contains zip code information that can be extracted using regular 
+expressions. Before I can start summarizing or visualizing anything I need to
+perform some data cleansing/transformations.
+
+```{r registration-dates}
+dog_permit_clean <- dog_permit_data %>%
+  clean_names() %>%
+  rename(owner_address = owner_address_text, license_term = license_term_code,
+         dog_gender = dog_sex_code, sn_ind = spayed_neutered_ind) %>%
+  select(owner_address, payment_date, license_term, dog_gender,
+         sn_ind)
+
+dog_permit_clean <- dog_permit_clean %>%
+  mutate(reg_date = parse_date_time(payment_date, orders = "%Y-%m-%d%H:%M:%S"),
+         across(.cols = reg_date, 
+                .fns = list(y = year, m = month, wd = weekdays), 
+                .names = "reg_{fn}"),
+         reg_ym = glue("{reg_y}{str_pad(reg_m, 2, 'left', '0')}"),
+         curr_ym = glue("{year(Sys.Date())}{str_pad(month((Sys.Date())), 2, 'left', '0')}"),
+         owner_zip = as.factor(str_extract(owner_address,
+                                           "(?<=VA\\s)\\d{5}")),
+         sn_ind = if_else(sn_ind == "YES", TRUE, FALSE)) %>%
+  filter(str_detect(owner_address, "ARLINGTON")) %>% 
+  na.omit()
+```
+
+# Visualization
+
+There are a lot of cool visualization that can be created from this new tidied
+data frame. I'll start by graphing the frequency of dog registrations by month
+for each year faceted by gender.
+
+```{r plot-1}
+ggthemr(palette = "solarized",
+        layout = "plain",
+        text_size = 15,
+        spacing = 2)
+
+dog_permit_clean %>%
+  filter(reg_ym != curr_ym) %>%
+  count(reg_m, reg_y) %>%
+  filter(reg_y >= 2017) %>%
+  mutate(reg_y = factor(reg_y,
+                           levels = seq(max(dog_permit_clean$reg_y),
+                                        min(dog_permit_clean$reg_y)))) %>%
+  ggplot(aes(reg_m, n,
+             col = reg_y)) +
+  geom_line(size = 1.1) +
+  geom_point(size = 3L, col = ggthemr:::get_themr()$palette$background) +
+  geom_point(size = 1.9) +
+  scale_x_continuous(breaks = breaks_width(1)) +
+  labs(x = "Month", y = "n", col = "Year",
+       title = "Arlington County Dog Permit Registrations",
+       caption = glue("Arlington County Data API was used \\
+                      for this purpose, but it is not endorsed \\
+                      or certified by Arlington County.")) +
+  theme(text = element_text(family = "Courier"),
+        plot.title = element_text(hjust = 0.5, size = 15),
+        plot.caption = element_text(hjust = 0.45, size = 7)) +
+  scale_colour_ggthemr_d()
+```
+
+Arlington County didn't start supplying registration data until 2017 so I
+filtered out all of the data before then. I also removed any data for the
+current month. I chose to overlay each year to get a better sense of how 2020
+registrations compare to prior years. It looks as though the highest amount of
+monthly registrations were made in June of 2020. This spike could be attributed to a
+lag in reporting due to Covid. Or the spike could be a genuine representation
+of Arlingtonians' increased desire to be dog owners during the pandemic. I'm
+leaning towards the latter given that the amount of registrations from January
+to May are still above previous years.
+
+Next I'd like to know where the dog are registered.
+
+```{r, message=FALSE, collapse=TRUE}
+arlington_sf <- xfun::cache_rds({
+  tigris::zctas(starts_with = c("222"),
+                          state = "virginia", cb = TRUE) %>%
+    rename(zip_code = ZCTA5CE10)
+})
+
+ggthemr(palette = "solarized",
+        text_size = 15,
+        spacing = 0.5)
+
+arlington_sf %>%
+  left_join(dog_permit_clean %>%
+              filter(reg_ym != curr_ym) %>%
+              count(owner_zip),
+            by = c("zip_code" = "owner_zip")) %>%
+  ggplot() + geom_sf(aes(fill = n)) +
+  geom_sf_label(aes(label = zip_code)) +
+  theme(text = element_text(family = "Courier"),
+        plot.title = element_text(hjust = 0.5, size = 15),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        plot.caption = element_text(hjust = 0.35, size = 7)) +
+  scale_fill_gradient(low = "#86C0EA", high = swatch()[1]) +
+  labs(title = "Dog Permit Registrations by Zip",
+       fill = "",
+       caption = glue("Arlington County Data API was used \\
+                      for this purpose, but it is not endorsed \\
+                      or certified by Arlington County."))
+```
+
+This map shows me the total number of registrations per zip code.
+
+# Attribution
+Arlington County Data API was used for this purpose, but it is not endorsed or certified by Arlington County.
+
+
