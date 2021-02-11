@@ -88,7 +88,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_meta_tags-->
   <title>Apple Health Data - Workout Activity</title>
   
-  <meta property="description" itemprop="description" content="Analyzing my run recent run activity."/>
+  <meta property="description" itemprop="description" content="Analyzing my recent run activity."/>
   
   
   <!--  https://schema.org/Article -->
@@ -99,19 +99,25 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Apple Health Data - Workout Activity"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Analyzing my run recent run activity."/>
+  <meta property="og:description" content="Analyzing my recent run activity."/>
+  <meta property="og:image" content="https://mh-blog.netlify.app/apple-health-data-workout-activity_files/figure-html5/unnamed-chunk-8-1.png"/>
+  <meta property="og:image:width" content="1248"/>
+  <meta property="og:image:height" content="768"/>
   <meta property="og:locale" content="en_US"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
-  <meta property="twitter:card" content="summary"/>
+  <meta property="twitter:card" content="summary_large_image"/>
   <meta property="twitter:title" content="Apple Health Data - Workout Activity"/>
-  <meta property="twitter:description" content="Analyzing my run recent run activity."/>
+  <meta property="twitter:description" content="Analyzing my recent run activity."/>
+  <meta property="twitter:image" content="https://mh-blog.netlify.app/apple-health-data-workout-activity_files/figure-html5/unnamed-chunk-8-1.png"/>
+  <meta property="twitter:image:width" content="1248"/>
+  <meta property="twitter:image:height" content="768"/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Apple Health Data - Workout Activity"]},{"type":"character","attributes":{},"value":["Analyzing my run recent run activity.\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Matthew Harris"]}]}]},{"type":"character","attributes":{},"value":["01-10-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","base_url","author","date","output"]}},"value":[{"type":"character","attributes":{},"value":["Apple Health Data - Workout Activity"]},{"type":"character","attributes":{},"value":["Analyzing my recent run activity.\n"]},{"type":"character","attributes":{},"value":["https://mh-blog.netlify.app"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Matthew Harris"]}]}]},{"type":"character","attributes":{},"value":["01-10-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","depth","self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]},{"type":"logical","attributes":{},"value":[false]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -1454,7 +1460,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Apple Health Data - Workout Activity","description":"Analyzing my run recent run activity.","authors":[{"author":"Matthew Harris","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-01-10T00:00:00.000+00:00","citationText":"Harris, 2021"}
+{"title":"Apple Health Data - Workout Activity","description":"Analyzing my recent run activity.","authors":[{"author":"Matthew Harris","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-01-10T00:00:00.000+00:00","citationText":"Harris, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1467,7 +1473,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h1>Apple Health Data - Workout Activity</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Analyzing my run recent run activity.</p></p>
+<p><p>Analyzing my recent run activity.</p></p>
 </div>
 
 <div class="d-byline">
@@ -1477,6 +1483,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#packages">Packages</a></li>
+<li><a href="#xml-to-rds">XML to RDS</a></li>
+<li><a href="#data-cleansing">Data Cleansing</a></li>
+<li><a href="#analysis-and-visualization">Analysis and Visualization</a></li>
+</ul>
+</nav>
+</div>
 <h2 id="packages">Packages</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">

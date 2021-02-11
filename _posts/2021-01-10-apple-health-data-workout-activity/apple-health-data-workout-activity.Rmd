@@ -1,12 +1,15 @@
 ---
 title: "Apple Health Data - Workout Activity"
 description: |
-  Analyzing my run recent run activity.
+  Analyzing my recent run activity.
+base_url: https://mh-blog.netlify.app
 author:
   - name: Matthew Harris
 date: 01-10-2021
 output:
   distill::distill_article:
+    toc: true
+    depth: 2
     self_contained: false
 ---
 
