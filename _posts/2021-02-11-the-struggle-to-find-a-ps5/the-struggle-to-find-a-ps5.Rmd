@@ -1,0 +1,123 @@
+---
+title: "The struggle to find a PS5"
+description: |
+  The struggle is real.
+author:
+  - name: Matthew Harris
+date: 02-11-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+Like many people I have failed to successfully order a PS5 from any of the major electronic retailers in America. I've only attempted a couple of times but it appears as though the consoles sell out within minutes of being available. Since I don't have a PS5 to distract me in my free time I decided to make a quick post on the launch so far. The data that I am using is pulled from the [<b>nowinstock.net</b>](https://www.nowinstock.net) website. This site is used to track item inventory for various products. The site contains a table of all previous PS5 stock information going all the way back to when the console was open for pre-order. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## The packages
+```{r, message = FALSE}
+xfun::pkg_attach("dplyr", "rvest", "lubridate", "purrr", "stringr",
+                 "data.table", "tidyr", "ggplot2", "scales",
+                 "ggsci", "ggthemr")
+```
+
+## Scrapping the PS5 stock data
+
+The first step is to scrape the table from the site. I prefer to use APIs to access data from websites but there isn't one available for this site. Luckily the data can be scrapped in a single call and doesn't require me to do any pagination.
+
+```{r}
+ps5_data <- html("https://www.nowinstock.net/videogaming/consoles/sonyps5/full_history.php")
+```
+
+The node for this table can be identified by using the selector gadget chrome extension. The node I'm looking for can be found under the "table" node.
+
+```{r}
+ps5_stock_data <- ps5_data %>% 
+  html_node("table") %>% 
+  html_table() %>% 
+  as.data.frame() %>% 
+  as_tibble() %>% 
+  set_names(c("date_time", "status"))
+
+ps5_stock_data %>% 
+  head()
+```
+Great. I now have a dataframe that contains all of the stock information. Next I need to clean the data to make it a little easier to use. The date_time column should be pretty easy to reformat but the status column will need a little more attention. The goal is to extract the name of the retailer, console details, retail price, and the time that the console was in/out of stock. All of this can be achieved using regular expression and functions from the stringr and lubridate packages.
+
+## Formatting
+```{r}
+ps5_stock_data <- ps5_stock_data %>% 
+  mutate(sale_date = parse_date_time(date_time, "%b %d %Y - %H:%M %p"),
+         across(.cols = sale_date, .fns = c(day = day, mon = month, yr = year,
+                                            hr = hour, mnt = minute),
+                .names = "sale_{.fn}"),
+         retailer = str_extract(status, ".*(?=\\s-)"),
+         stock_status = ifelse(str_detect(status, "In Stock"), TRUE, FALSE),
+         product_type = str_extract(status, "(?<=\\s-\\s).*"),
+         product_type = str_extract(product_type, ".*(?=\\sOut|In)"),
+         product_type = str_remove_all(product_type, "\\s|:"),
+         retail_price = as.double(str_extract(status, "(?<=\\$)\\d*\\.\\d*"))) %>% 
+  select(-c(date_time, status))
+
+ps5_stock_data %>% 
+  glimpse()
+```
+
+## Filter out pre orders
+
+I've decided to use the roll feature of the data.table join methods. This allows me to the in-stock and out-of-stock times that are closest to each other based upon the same retailer, product type and date. Its not the best way to match the sales but it works for now.
+
+```{r}
+ps5_in_stock <- ps5_stock_data %>%
+  filter(sale_date >= "2020-11-11", stock_status == TRUE) %>%
+  mutate(in_date = sale_date) %>% 
+  select(-stock_status) %>%
+  as.data.table()
+
+setkey(ps5_in_stock, retailer, product_type, sale_date)
+
+ps5_out_stock <- ps5_stock_data %>%
+  filter(sale_date >= "2020-11-11", stock_status == FALSE) %>%
+  mutate(out_date = sale_date) %>%
+  select(sale_date, retailer, product_type, out_date) %>%
+  as.data.table()
+
+setkey(ps5_out_stock, retailer, product_type, sale_date)
+
+ps5_sales <- ps5_in_stock[ps5_out_stock, roll = TRUE] %>% 
+  as_tibble() %>% 
+  na.omit() %>% 
+  mutate(sale_length = as.integer(out_date - in_date),
+         sale_date = as.Date(sale_date))
+
+head(ps5_sales)
+
+```
+
+## Visualizations
+
+I've got all of my data cleaned and formatted the way that I want, so what can I learn? The plot below details the sales from each retailer since the launch of the PS5. The y axis measures how long the console took to sell out. From the plot I'm able to see that GameStop primarily sells more expensive bundles. 
+
+```{r}
+
+ggthemr("solarized")
+
+ps5_sales %>% 
+  arrange(desc(sale_date)) %>% 
+  filter(sale_length < 86400) %>% 
+  mutate(sale_length_minutes = sale_length / 60) %>% 
+  ggplot(aes(sale_date, sale_length_minutes, 
+             col = retailer, size = retail_price)) + 
+  geom_point(alpha = 0.7) + scale_y_continuous(breaks =  breaks_width(5)) +
+  scale_x_date(breaks = breaks_width("1 week")) +
+  scale_color_npg() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(x = "Sale Date", y = "Sale Length (minutes)",
+       col = "Retailer", size = "Retail Price ($)")
+``` 
+
+
+
+

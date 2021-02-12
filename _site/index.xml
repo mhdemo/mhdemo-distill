@@ -7,7 +7,16 @@
     <description>Short posts and ideas on how I conduct data anlysis.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 10 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 11 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>The struggle to find a PS5</title>
+      <dc:creator>Matthew Harris</dc:creator>
+      <link>https://mh-blog.netlify.app/posts/2021-02-11-the-struggle-to-find-a-ps5</link>
+      <description>The struggle is real.</description>
+      <guid>https://mh-blog.netlify.app/posts/2021-02-11-the-struggle-to-find-a-ps5</guid>
+      <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://mh-blog.netlify.app/posts/2021-02-11-the-struggle-to-find-a-ps5/the-struggle-to-find-a-ps5_files/figure-html5/unnamed-chunk-6-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Arlington County Open Data - The dogs of Arlington</title>
       <dc:creator>Matthew Harris</dc:creator>
