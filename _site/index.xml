@@ -27,6 +27,15 @@
       <media:content url="https://mh-blog.netlify.app/posts/2021-02-10-arlington-county-open-data-the-dogs-of-arlington/the-dogs-of-arlington_files/figure-html5/plot-1-1.png" medium="image" type="image/png" width="1248" height="768"/>
     </item>
     <item>
+      <title>Batch exporting plots in R</title>
+      <dc:creator>Matthew Harris</dc:creator>
+      <link>https://mh-blog.netlify.app/posts/2021-02-02-batch-exporting-plots-in-r</link>
+      <description>Exporting multiple plots created by ggplot.</description>
+      <guid>https://mh-blog.netlify.app/posts/2021-02-02-batch-exporting-plots-in-r</guid>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://mh-blog.netlify.app/posts/2021-02-02-batch-exporting-plots-in-r/batch-exporting-plots-in-r_files/figure-html5/unnamed-chunk-3-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
       <title>Apple Health Data - Workout Activity</title>
       <dc:creator>Matthew Harris</dc:creator>
       <link>https://mh-blog.netlify.app/posts/2021-01-10-apple-health-data-workout-activity</link>
