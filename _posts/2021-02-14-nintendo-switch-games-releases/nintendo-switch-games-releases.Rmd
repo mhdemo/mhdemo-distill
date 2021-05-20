@@ -1,0 +1,165 @@
+---
+title: "Nintendo Switch Games Releases"
+description: |
+  Nintnendo Switch video game release trends.
+author:
+  - name: Matthew Harris
+date: 05-19-2021
+output:
+  distill::distill_article:
+    self_contained: false
+draft: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r fig.cap="Image from https://unsplash.com/photos/u3M1VSGfYqw", out.extra="class=external", echo=FALSE}
+knitr::include_graphics("frederic-christian-u3M1VSGfYqw-unsplash.jpg")
+```
+
+## Packages
+```{r packages, message=FALSE}
+library(tidyverse)
+library(httr)
+library(rvest)
+library(lubridate)
+library(glue)
+library(ggthemr)
+
+```
+
+```{r, include=FALSE}
+game_data <- readRDS("data/game_export.RDS")
+```
+
+## Scraping
+```{r, eval=FALSE}
+games_url_af <- "https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(A–F)"
+games_url_gp <- "https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(G–P)"
+games_url_qz <- "https://en.wikipedia.org/wiki/List_of_Nintendo_Switch_games_(Q–Z)"
+
+wiki_scrape <- function(wiki_url) {
+  wiki_url %>% 
+    read_html() %>%
+    html_nodes(css = "#softwarelist") %>% 
+    html_table(fill = TRUE) %>% 
+    as.data.frame() %>% 
+    as_tibble()
+}
+
+game_data <- list(games_url_af, games_url_gp, games_url_qz) %>% 
+  map(.f = ~wiki_scrape(.x))
+```
+
+## Data wrangling
+```{r}
+switch_library <- game_data %>% 
+  bind_rows() %>% 
+    select(-Ref.) %>% 
+  slice(-1) %>% 
+  janitor::clean_names() %>% 
+  setNames(str_remove_all(names(.), "_s")) %>% 
+  rename(rd_jp = release_date, 
+         rd_na = release_date_1, 
+         rd_pal = release_date_2) %>%
+  mutate(across(.cols = c(rd_jp, rd_na, rd_pal),
+                # Nesting the na_if() since it doesn't work with regex |
+                .fns = ~na_if(na_if(.x, "Unreleased"), "TBA")),
+         across(.cols = c(rd_jp, rd_na, rd_pal),
+                .fns = ~as.Date(.x, format = "%B %d, %Y")))
+```
+
+
+```{r}
+switch_library %>% 
+  select(-rd_jp, -rd_pal) %>% 
+  drop_na() %>% 
+  distinct(genre) %>% 
+  count()
+```
+
+
+```{r}
+na_releases <- switch_library %>% 
+  select(-rd_jp, -rd_pal) %>% 
+  drop_na() %>% 
+  filter(rd_na <= Sys.Date()) %>%
+  mutate(genre = tolower(genre),
+         common_genre = case_when(
+           str_detect(genre, "adventure") ~ "adventure",
+           str_detect(genre, "puzzle") ~ "puzzle",
+           str_detect(genre, "platfor") ~ "platformer",
+           str_detect(genre, "adventure") ~ "adventure",
+           str_detect(genre, "role") ~ "role-playing",
+           str_detect(genre, "action") ~ "action",
+           str_detect(genre, "simulation") ~ "simulation",
+           str_detect(genre, "racing|race") ~ "racing",
+           str_detect(genre, "sport") ~ "sports",
+           str_detect(genre, "fight|brawl") ~ "fighting",
+           str_detect(genre, "rogue") ~ "rogue-like",
+           str_detect(genre, "novel") ~ "visual novel",
+           str_detect(genre, "shoot 'em up") ~ "shmup",
+           str_detect(genre, "strategy|tactics") ~ "strategy",
+           str_detect(genre, "party") ~ "party", 
+           TRUE ~ "other"),
+         release_year = year(rd_na),
+         release_quarter = quarter(rd_na),
+         release_floor_month = round_date(rd_na, "month")
+  )
+
+na_releases %>% 
+  group_by(common_genre) %>% 
+  count() %>% 
+  ungroup() %>% 
+  arrange(desc(n))
+
+top_genres <- na_releases %>% 
+  group_by(common_genre) %>% 
+  count() %>% 
+  ungroup() %>% 
+  slice_max(order_by = n, n = 5) %>% 
+  pull(common_genre)
+
+```
+
+## Visualization
+```{r}
+ggthemr("solarized")
+
+na_releases %>% 
+  count(release_floor_month) %>% 
+  ggplot(aes(release_floor_month, n)) + geom_col()
+
+switch_library %>% 
+  select(-rd_jp, -rd_pal) %>% 
+  drop_na() %>% 
+  count(genre) %>% 
+  arrange(desc(n))
+
+na_releases %>%
+  count(common_genre, release_floor_month) %>% 
+  filter(common_genre %in% top_genres) %>%
+  ggplot(aes(release_floor_month, n, col = common_genre, size = n)) + geom_jitter() +
+  ggthemr::scale_colour_ggthemr_d() +
+  scale_size_continuous(guide = FALSE)
+
+na_releases %>%
+  filter(common_genre %in% top_genres) %>% 
+  count(common_genre, release_quarter, release_year) %>% 
+  ggplot(aes(release_quarter, n, fill = common_genre)) + 
+  geom_col(position = "dodge") +
+  facet_wrap(~release_year) + ggthemr::scale_colour_ggthemr_d()
+
+
+switch_library %>% 
+  select(-rd_jp, -rd_pal) %>% 
+  drop_na() %>% 
+  mutate(genre = tolower(genre)) %>% 
+  filter(str_detect(genre, "rogue"))
+```
+
+
+
