@@ -1,0 +1,66 @@
+pet_name,status,location,age,breed,color,gender,fixed,pet_link
+Ackee,Available,At Shelter,Baby,Rat,White,Male,No,https://www.awla.org/pet/ackee/
+Fifi,Available,At Shelter,Adult,Hamster,Grey,Female,No,https://www.awla.org/pet/fifi/
+Fabio,Available,In Foster,Adult,Guinea Pig,Black,Male,No,https://www.awla.org/pet/fabio/
+Evelyn,Available,In Foster,Baby,Domestic Shorthair,Brown,Female,No,https://www.awla.org/pet/evelyn/
+Erdman,Available,In Foster,Adult,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/erdman/
+Earl,Available,In Foster,Baby,Domestic Shorthair,Grey,Male,No,https://www.awla.org/pet/earl/
+Dior,Available,At Shelter,Young,"Mixed Breed, Medium (up to 44 lbs fully grown)",Brown,Female,Yes,https://www.awla.org/pet/dior/
+Delores,Available,At Shelter,Adult,Domestic Shorthair,Brown,Female,Yes,https://www.awla.org/pet/delores/
+Della,Available,At Shelter,Young,"Mixed Breed, Medium (up to 44 lbs fully grown)",Tan,Female,Yes,https://www.awla.org/pet/della-2/
+Della,Available,At Shelter,Adult,Pixie-Bob,Black,Female,Yes,https://www.awla.org/pet/della/
+Dazy,Available,At Shelter,Young,"Mixed Breed, Medium (up to 44 lbs fully grown)",Tan,Female,Yes,https://www.awla.org/pet/dazy/
+Daria,Available,At Shelter,Adult,Domestic Shorthair,Black,Female,Yes,https://www.awla.org/pet/daria/
+Daisy,Available,In Foster,Adult,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/daisy/
+Cleo,Available,In Foster,Adult,Domestic Shorthair,Brown,Female,Yes,https://www.awla.org/pet/cleo/
+Chrissie,Available,In Foster,Young,Domestic Shorthair,Black,Female,Yes,https://www.awla.org/pet/chrissie/
+Mowgli,Available,In Foster,Adult,Domestic Shorthair,Black,Male,Yes,https://www.awla.org/pet/mowgli/
+Zuri,Available,At Shelter,Adult,Domestic Shorthair,White,Male,Yes,https://www.awla.org/pet/zuri/
+Walter,Available,At Shelter,Senior,Cockatiel,Yellow,Male,No,https://www.awla.org/pet/walter/
+Van Gogh,Available,At Shelter,Young,Guinea Pig,Brown,Male,No,https://www.awla.org/pet/van-gogh/
+Tugboat,Available,In Foster,Baby,Domestic Medium Hair,Brown,Female,No,https://www.awla.org/pet/tugboat/
+Tom,Available,In Foster,Adult,Domestic Shorthair,Brown,Male,Yes,https://www.awla.org/pet/tom/
+Stormy,Available,In Foster,Baby,Domestic Longhair,Grey,Female,No,https://www.awla.org/pet/stormy/
+Stella The Great,Available,At Shelter,Adult,Domestic Shorthair,White,Female,Yes,https://www.awla.org/pet/stella-the-great/
+Stella,Available,In Foster,Senior,Domestic Shorthair,Black,Female,Yes,https://www.awla.org/pet/stella/
+Starapple,Available,At Shelter,Baby,Rat,White,Male,No,https://www.awla.org/pet/starapple/
+Sage,Available,In Foster,Adult,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/sage/
+Roxy,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",Tan,Female,Yes,https://www.awla.org/pet/roxy/
+Remi,Available,In Foster,Adult,Domestic Shorthair,Black,Female,Yes,https://www.awla.org/pet/remi/
+Papi,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",Charcoal,Male,Yes,https://www.awla.org/pet/papi/
+Oscar,Available,At Shelter,Adult,Domestic Shorthair,Black,Male,Yes,https://www.awla.org/pet/oscar/
+Oona,Available,In Foster,Baby,Guinea Pig,Brown,Female,No,https://www.awla.org/pet/oona/
+Nonny,Available,At Shelter,Baby,Guinea Pig,Brown,Male,No,https://www.awla.org/pet/nonny/
+Myles,Available,In Foster,Young,"Mixed Breed, Large (over 44 lbs fully grown)",Tan,Male,Yes,https://www.awla.org/pet/myles/
+Mondrian,Available,At Shelter,Young,Guinea Pig,Brown,Male,No,https://www.awla.org/pet/mondrian/
+Mocha,Available,In Foster,Senior,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/mocha/
+Midnight,Available,In Foster,Adult,Guinea Pig,Brown,Female,No,https://www.awla.org/pet/midnight/
+Max,Available,In Foster,Adult,Lionhead,White,Male,Yes,https://www.awla.org/pet/max/
+Lou,Available,In Foster,Baby,Domestic Shorthair,Brown,Male,No,https://www.awla.org/pet/lou/
+Lizzo,Available,In Foster,Adult,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/lizzo/
+Linus,Available,At Shelter,Young,Guinea Pig,Tan,Male,No,https://www.awla.org/pet/linus/
+Lena,Available,In Foster,Adult,Domestic Shorthair,Orange,Female,Yes,https://www.awla.org/pet/lena/
+Layla,Available,In Foster,Adult,Domestic Shorthair,Brown,Female,Yes,https://www.awla.org/pet/layla/
+Kent,Available,In Foster,Baby,Domestic Shorthair,Brown,Male,No,https://www.awla.org/pet/kent/
+Keely,Available,In Foster,Adult,Domestic Shorthair,Grey,Female,Yes,https://www.awla.org/pet/keely/
+Katie,Available,In Foster,Adult,Rabbit,White,Female,Yes,https://www.awla.org/pet/katie/
+Juno,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",White,Female,Yes,https://www.awla.org/pet/juno/
+Jiggles,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",Black,Male,Yes,https://www.awla.org/pet/jiggles/
+Jasper,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",Tan,Male,Yes,https://www.awla.org/pet/jasper/
+Jan,Available,In Foster,Adult,Domestic Shorthair,White,Female,Yes,https://www.awla.org/pet/jan/
+Jagger,Available,In Foster,Adult,Domestic Shorthair,Black,Male,Yes,https://www.awla.org/pet/jagger/
+Jackfruit,Available,At Shelter,Baby,Rat,White,Male,No,https://www.awla.org/pet/jackfruit/
+Hollyleaf,Available,In Foster,Adult,Domestic Shorthair,Brown,Female,Yes,https://www.awla.org/pet/hollyleaf/
+Griszela,Available,At Shelter,Baby,Domestic Medium Hair,Black,Female,Yes,https://www.awla.org/pet/griszela/
+Glitter,Available,In Foster,Adult,Domestic Medium Hair,Black,Female,Yes,https://www.awla.org/pet/glitter/
+Ginny,Available,At Shelter,Adult,Domestic Shorthair,Brown,Female,Yes,https://www.awla.org/pet/ginny/
+Freddy,Available,At Shelter,Young,Guinea Pig,Grey,Male,No,https://www.awla.org/pet/freddy/
+Chai,Available,In Foster,Baby,Domestic Shorthair,Brown,Male,No,https://www.awla.org/pet/chai/
+Captain Snowball,Available,At Shelter,Adult,Rabbit,White,Male,No,https://www.awla.org/pet/captain-snowball/
+Captain Crunch,Available,At Shelter,Young,Hamster,Brown,Male,No,https://www.awla.org/pet/captain-crunch/
+Breezy,Available,In Foster,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",White,Female,Yes,https://www.awla.org/pet/breezy/
+Bowie,Available,In Foster,Adult,Domestic Shorthair,Black,Male,Yes,https://www.awla.org/pet/bowie/
+Boudin,Available,At Shelter,Baby,Domestic Shorthair,Black,Female,Yes,https://www.awla.org/pet/boudin/
+Blanche,Available,In Foster,Senior,"Mixed Breed, Small (under 24 lbs fully grown)",Golden,Female,Yes,https://www.awla.org/pet/blanche/
+Bessie,Available,At Shelter,Adult,"Mixed Breed, Large (over 44 lbs fully grown)",Black,Female,Yes,https://www.awla.org/pet/bessie/
+Bao,Available,At Shelter,Adult,Rabbit,Chocolate,Male,Yes,https://www.awla.org/pet/bao/

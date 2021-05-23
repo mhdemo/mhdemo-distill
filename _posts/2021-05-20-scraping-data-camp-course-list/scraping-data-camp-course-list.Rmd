@@ -1,0 +1,71 @@
+---
+title: "scraping-data-camp-course-list"
+description: |
+  A short description of the post.
+author:
+  - name: Matthew Harris
+    url: {}
+date: 05-20-2021
+output:
+  distill::distill_article:
+    self_contained: false
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r, message=FALSE, include=FALSE}
+## R
+xfun::pkg_attach('reticulate', 'dplyr', 'tidyr',
+                 'ggplot2', 'ggthemr', 'scales')
+use_condaenv("myenv")
+```
+
+```{python}
+## Python
+
+# Library imports
+from scrapy import Selector
+import pandas as pd
+import os
+import re
+
+# Load the HTML file downloaded from the site.
+with open(f'{os.getcwd()}/data/data_camp_all_course_html_2021-05-18.html') as f:
+    dc_html = f.read()
+
+# Turn the HTML text into a Selector object and then use X Path expression to select all the 'a'
+# tag elements that have a class id of 'css-wq8yda'.
+sel = Selector(text=dc_html)
+courses_full = sel.xpath('//a[@class="css-wq8yda"]')
+
+path_dict = {'.//h2[@class="css-1m9re0m"]/text()': 'course_name',
+             './/p[@class="css-1hcb55o"]/text()': 'course_desc',
+             './/@href': 'course_path'}
+
+course_df = pd.DataFrame()
+for k, v in path_dict.items():
+    course_df[f'{v}'] = courses_full.xpath(f'{k}').extract()
+
+def lng_type(c_str):
+  if re.search(r'[P|p]ython', c_str) is not None:
+    return 'Python'
+  elif re.search(r'\sR\s?', c_str) is not None:
+    return 'R'
+  elif re.search(r'SQL', c_str) is not None:
+    return 'SQL'
+  elif re.search(r'\s[G|g]it\s?', c_str) is not None:
+    return 'git'
+  elif re.search(r'Tableau', c_str) is not None:
+    return 'Tableau'
+  elif re.search(r'Excel', c_str) is not None:
+    return 'Excel'
+  else:
+    return ''
+
+course_df['course_type'] = course_df['course_name'].map(lng_type)
+course_df.head()
+
+```

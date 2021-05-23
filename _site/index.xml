@@ -7,7 +7,16 @@
     <description>Short posts and ideas on how I conduct data anlysis.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 19 May 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Scraping pet shelter data with Python</title>
+      <dc:creator>Matthew Harris</dc:creator>
+      <link>https://mh-blog.netlify.app/posts/2021-05-22-scraping-pet-shelter-data-with-python</link>
+      <description>Using Python and the Scrapy library to crawl a pet adoption website.</description>
+      <guid>https://mh-blog.netlify.app/posts/2021-05-22-scraping-pet-shelter-data-with-python</guid>
+      <pubDate>Sat, 22 May 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://mh-blog.netlify.app/posts/2021-05-22-scraping-pet-shelter-data-with-python/all_pets_page.png" medium="image" type="image/png" width="2318" height="1414"/>
+    </item>
     <item>
       <title>Nintendo Switch Games Releases</title>
       <dc:creator>Matthew Harris</dc:creator>
